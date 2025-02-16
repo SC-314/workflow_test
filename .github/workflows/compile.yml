@@ -1,0 +1,29 @@
+name: Compile with Username
+
+on:
+  workflow_dispatch:
+    inputs:
+      username:
+        description: 'Enter username'
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Replace Username in Main.java
+        run: |
+          sed -i "s/USERNAME/${{ github.event.inputs.username }}/g" Main.java
+
+      - name: Compile Java files
+        run: javac Main.java Activate.java
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: compiled
+          path: |
+            *.class
